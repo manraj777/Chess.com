@@ -19,12 +19,12 @@ export class GameManager {
         this.users = [];
     }
 
-    addUser (socket: WebSocket){
+    addUser(socket: WebSocket){
          this.users.push(socket);
          this.addHandler(socket);
     }
 
-    removerUser (socket: WebSocket){
+    removerUser(socket: WebSocket){
         this.users = this.users.filter((user: WebSocket) => user !== socket);
         //stop game here because user has left
     }
