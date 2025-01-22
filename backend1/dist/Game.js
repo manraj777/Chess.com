@@ -26,17 +26,12 @@ class Game {
     makeMove(socket, move) {
         // validate the type of move using zod
         // validation check, is it a user moves, is the move valide
-        console.log(this.board.moves().length);
-        console.log(this.board.moves());
         if (this.moveCount % 2 === 0 && socket !== this.player1) {
-            console.log("early return 1");
             return;
         }
         if (this.moveCount % 2 === 1 && socket !== this.player2) {
-            console.log("early return 2");
             return;
         }
-        console.log("did not early return");
         try {
             this.board.move(move);
         }
@@ -44,7 +39,6 @@ class Game {
             console.log(e);
             return;
         }
-        console.log("move succeeded");
         // update the board, push the move
         // check if the game is over, 
         if (this.board.isGameOver()) {
@@ -63,16 +57,13 @@ class Game {
             return;
         }
         // send the update board to both player
-        console.log(this.board.moves().length % 2);
-        if (this.board.moves().length % 2 === 0) {
-            console.log("sent1");
+        if (this.moveCount % 2 === 0) {
             this.player2.send(JSON.stringify({
                 type: messages_1.MOVE,
                 payload: move
             }));
         }
         else {
-            console.log("sent2");
             this.player1.send(JSON.stringify({
                 type: messages_1.MOVE,
                 payload: move
