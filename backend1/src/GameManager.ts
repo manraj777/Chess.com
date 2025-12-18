@@ -5,7 +5,7 @@
 // }
 
 import { WebSocket, WebSocketServer } from "ws";
-import { INIT_GAME, MOVE } from "./messages";
+import { INIT_GAME, MOVE, RESIGN } from "./messages";
 import { Game } from "./Game";
 // user, game
 export class GameManager {
@@ -45,6 +45,12 @@ export class GameManager {
                  const game = this.games.find(game => game.player1 === socket || game.player2 === socket);
                 if (game){
                     game.makeMove(socket, message.payload.move);
+                }
+            }
+            if (message.type === RESIGN){
+                const game = this.games.find(game => game.player1 === socket || game.player2 === socket);
+                if (game){
+                    game.handleResign(socket);
                 }
             }
         })

@@ -81,4 +81,23 @@ export class Game {
         }
         this.moveCount++;
     }
+
+    handleResign(socket: WebSocket){
+        // Determine the winner based on who resigned
+        const winner = socket === this.player1 ? "black" : "white";
+        
+        // Send game over message to both players
+        this.player1.send(JSON.stringify({
+            type: GAME_OVER,
+            payload: {
+                winner: winner
+            }
+        }));
+        this.player2.send(JSON.stringify({
+            type: GAME_OVER,
+            payload: {
+                winner: winner
+            }
+        }));
+    }
 }
