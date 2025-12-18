@@ -1,0 +1,20 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "tsc: build - backend1",
+			"type": "shell",
+			"command": "tsc",
+			"args": [
+				"-b"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$tsc"
+			],
+			"presentation": {
+				"reveal": "silent"
+			}
+		}
+	]
+}

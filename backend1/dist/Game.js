@@ -39,6 +39,7 @@ class Game {
             console.log(e);
             return;
         }
+        // await db.moves.push(move);
         // update the board, push the move
         // check if the game is over, 
         if (this.board.isGameOver()) {
