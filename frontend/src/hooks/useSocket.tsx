@@ -1,6 +1,18 @@
 import { useEffect, useState } from "react"
 
-const WS_URL = "ws://localhost:8080"; 
+const BACKEND_URL: string = (import.meta.env.VITE_BACKEND_URL as string) || "http://localhost:8080";
+function toWsUrl(baseUrl: string): string {
+    try {
+        const url = new URL(baseUrl);
+        if (url.protocol === "https:") url.protocol = "wss:";
+        else if (url.protocol === "http:") url.protocol = "ws:";
+        return url.toString();
+    } catch {
+        // Fallback if an invalid URL is provided: assume host without protocol
+        return `ws://${baseUrl.replace(/^\/+/, "")}`;
+    }
+}
+const WS_URL = toWsUrl(BACKEND_URL);
 export const useScoket = () => {
     const [socket, setSocket] = useState<WebSocket | null>(null);
      
