@@ -5,13 +5,13 @@ import { Game } from './screens/Game';
 
 function App() {
   return (
-    <div className='h-screen bg-slate-950'>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/"  element = {<Landing />}/> 
-        <Route path="/game"  element = {<Game />}/> 
-      </Routes>
-    </BrowserRouter>
+    <div className='min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 pt-10 pb-16'>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/"  element = {<Landing />}/> 
+          <Route path="/game"  element = {<Game />}/> 
+        </Routes>
+      </BrowserRouter>
     </div>
   )
 }

@@ -4,22 +4,25 @@ exports.Game = void 0;
 const chess_js_1 = require("chess.js");
 const messages_1 = require("./messages");
 class Game {
-    constructor(player1, player2) {
+    constructor(player1, player2, timeControl = 300) {
         this.moveCount = 0;
         this.player1 = player1;
         this.player2 = player2;
         this.board = new chess_js_1.Chess;
         this.startTime = new Date();
+        this.timeControl = timeControl;
         this.player1.send(JSON.stringify({
             type: messages_1.INIT_GAME,
             payload: {
-                color: "white"
+                color: "white",
+                timeControl: this.timeControl
             }
         }));
         this.player2.send(JSON.stringify({
             type: messages_1.INIT_GAME,
             payload: {
-                color: "black"
+                color: "black",
+                timeControl: this.timeControl
             }
         }));
     }
@@ -61,13 +64,13 @@ class Game {
         if (this.moveCount % 2 === 0) {
             this.player2.send(JSON.stringify({
                 type: messages_1.MOVE,
-                payload: move
+                payload: { move }
             }));
         }
         else {
             this.player1.send(JSON.stringify({
                 type: messages_1.MOVE,
-                payload: move
+                payload: { move }
             }));
         }
         this.moveCount++;

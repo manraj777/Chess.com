@@ -10,12 +10,12 @@ import { Game } from "./Game";
 // user, game
 export class GameManager {
     private games: Game[];
-    private pendingUser: WebSocket | null;
+    private pendingUsers: Map<number, WebSocket>; // timeControl -> socket
     private users: WebSocket[];
 
     constructor(){  
         this.games = [];
-        this.pendingUser = null;
+        this.pendingUsers = new Map();
         this.users = [];
     }
 
@@ -33,12 +33,17 @@ export class GameManager {
             const message = JSON.parse(data.toString());
 
             if (message.type === INIT_GAME){
-                if (this.pendingUser){
-                    const game = new Game(this.pendingUser, socket);
+                const timeControl = message.payload?.timeControl || 300; // default 5 min
+                
+                // Check if someone is waiting with the same time control
+                if (this.pendingUsers.has(timeControl)){
+                    const opponent = this.pendingUsers.get(timeControl)!;
+                    const game = new Game(opponent, socket, timeControl);
                     this.games.push(game);
-                    this.pendingUser = null;
-                }else{
-                    this.pendingUser = socket;
+                    this.pendingUsers.delete(timeControl);
+                } else {
+                    // Add to queue for this time control
+                    this.pendingUsers.set(timeControl, socket);
                 }
             }
             if ( message.type === MOVE){

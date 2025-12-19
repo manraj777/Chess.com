@@ -12,7 +12,7 @@ const Game_1 = require("./Game");
 class GameManager {
     constructor() {
         this.games = [];
-        this.pendingUser = null;
+        this.pendingUsers = new Map();
         this.users = [];
     }
     addUser(socket) {
@@ -25,15 +25,20 @@ class GameManager {
     }
     addHandler(socket) {
         socket.on("message", (data) => {
+            var _a;
             const message = JSON.parse(data.toString());
             if (message.type === messages_1.INIT_GAME) {
-                if (this.pendingUser) {
-                    const game = new Game_1.Game(this.pendingUser, socket);
+                const timeControl = ((_a = message.payload) === null || _a === void 0 ? void 0 : _a.timeControl) || 300; // default 5 min
+                // Check if someone is waiting with the same time control
+                if (this.pendingUsers.has(timeControl)) {
+                    const opponent = this.pendingUsers.get(timeControl);
+                    const game = new Game_1.Game(opponent, socket, timeControl);
                     this.games.push(game);
-                    this.pendingUser = null;
+                    this.pendingUsers.delete(timeControl);
                 }
                 else {
-                    this.pendingUser = socket;
+                    // Add to queue for this time control
+                    this.pendingUsers.set(timeControl, socket);
                 }
             }
             if (message.type === messages_1.MOVE) {

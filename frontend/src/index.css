@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+header {
+  margin-top: 0;
+  margin-bottom: 5px;
+}

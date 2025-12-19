@@ -1,8 +1,9 @@
 import { Color, PieceSymbol, Square } from "chess.js";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 import { MOVE } from "../screens/Game";
+// CapturedPieces import removed; board no longer renders it directly
 
-export const ChessBoard = ({ chess, board, socket, setBoard, playerColor, currentTurn, setCurrentTurn, moves, setMoves, showMoves, gameOver }: {
+export const ChessBoard = ({ chess, board, socket, setBoard, playerColor, currentTurn, setCurrentTurn, moves, setMoves, showMoves, gameOver, setWhiteCaptured, setBlackCaptured }: {
     chess: any;
     setBoard: any;
     board:({
@@ -18,6 +19,8 @@ export const ChessBoard = ({ chess, board, socket, setBoard, playerColor, curren
     setMoves: (moves: string[]) => void;
     showMoves: boolean;
     gameOver?: boolean;
+    setWhiteCaptured?: Dispatch<SetStateAction<PieceSymbol[]>>;
+    setBlackCaptured?: Dispatch<SetStateAction<PieceSymbol[]>>;
 }) => {
     const [from, setFrom] = useState<null | Square>(null);
     const [legalMoves, setLegalMoves] = useState<Square[]>([]);
@@ -25,7 +28,7 @@ export const ChessBoard = ({ chess, board, socket, setBoard, playerColor, curren
     // Flip board for black player perspective
     const displayBoard = playerColor === "black" ? board.slice().reverse().map(row => row.slice().reverse()) : board;
     
-    return <div className="text-white-200">
+    return <div className="text-white-200 p-2 rounded-xl bg-gradient-to-br from-emerald-900/60 to-slate-900/60 shadow-2xl border border-white/10">
         {displayBoard.map((row, i) => {
             return <div key={i} className="flex">
                 {row.map((square, j) => {
@@ -61,6 +64,16 @@ export const ChessBoard = ({ chess, board, socket, setBoard, playerColor, curren
                                 console.log("You can only move your own pieces!");
                             }
                         } else {
+                            // Detect capture before move
+                            const captureSquare = chess.get(squareRepresentation);
+                            if (captureSquare && setWhiteCaptured && setBlackCaptured) {
+                                const capturedType = captureSquare.type as PieceSymbol;
+                                if (captureSquare.color === "w") {
+                                    setBlackCaptured((prev: PieceSymbol[] = []) => [...prev, capturedType]);
+                                } else {
+                                    setWhiteCaptured((prev: PieceSymbol[] = []) => [...prev, capturedType]);
+                                }
+                            }
                             // Attempt to make the move
                             socket.send(JSON.stringify({
                                 type: MOVE,
@@ -88,10 +101,10 @@ export const ChessBoard = ({ chess, board, socket, setBoard, playerColor, curren
                                 to:squareRepresentation
                             })
                         }
-                    }} key={j} className={`w-16 h-16 ${from === squareRepresentation ? 'bg-yellow-400' : legalMoves.includes(squareRepresentation) ? 'bg-blue-400' : (i+j)%2 === 0 ? 'bg-green-500':'bg-slate-500'} cursor-pointer transition-all`}>
+                    }} key={j} className={`w-16 h-16 ${from === squareRepresentation ? 'bg-yellow-400/80' : legalMoves.includes(squareRepresentation) ? 'bg-blue-500/70' : (i+j)%2 === 0 ? 'bg-emerald-700':'bg-emerald-900'} cursor-pointer transition-all duration-150 border border-black/30 shadow-inner`}>
                         <div className="w-full justify-center flex h-full">
                             <div className="h-full justify-center flex flex-col">
-                            {square ? <img className="w-4" src={`/${square?.color === "b" ? square?.type : `${square?.type?.toUpperCase()} copy`}.png`} /> : null} 
+                            {square ? <img className="w-8 drop-shadow-xl" src={`/${square?.color === "b" ? square?.type : `${square?.type?.toUpperCase()} copy`}.png`} /> : null} 
                             </div>
                         </div>   
                     </div>
