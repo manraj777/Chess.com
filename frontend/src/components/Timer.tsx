@@ -1,5 +1,3 @@
-import React from "react";
-
 export const Timer = ({ label, seconds, active }: {
   label: string;
   seconds: number;

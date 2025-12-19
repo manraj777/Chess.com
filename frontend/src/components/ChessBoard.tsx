@@ -68,10 +68,12 @@ export const ChessBoard = ({ chess, board, socket, setBoard, playerColor, curren
                             const captureSquare = chess.get(squareRepresentation);
                             if (captureSquare && setWhiteCaptured && setBlackCaptured) {
                                 const capturedType = captureSquare.type as PieceSymbol;
-                                if (captureSquare.color === "w") {
-                                    setBlackCaptured((prev: PieceSymbol[] = []) => [...prev, capturedType]);
-                                } else {
+                                // If black piece captured, add to whiteCaptured (white took black)
+                                if (captureSquare.color === "b") {
                                     setWhiteCaptured((prev: PieceSymbol[] = []) => [...prev, capturedType]);
+                                } else {
+                                    // If white piece captured, add to blackCaptured (black took white)
+                                    setBlackCaptured((prev: PieceSymbol[] = []) => [...prev, capturedType]);
                                 }
                             }
                             // Attempt to make the move

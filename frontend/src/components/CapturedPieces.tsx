@@ -79,9 +79,9 @@ export const CapturedPieces = ({
   return (
     <div className="w-full">
       <div className="flex items-start justify-center gap-12 px-4">
-        {/* White's Captures (Black pieces that White captured) */}
+        {/* Black pieces captured (by White) */}
         <div>
-          <div className="text-white/60 text-xs font-semibold mb-2 text-center">White's Captures</div>
+          <div className="text-white/60 text-xs font-semibold mb-2 text-center">Captured Black Pieces</div>
           <div className="space-y-1">
             {blackLayout.map((row, rowIdx) => (
               <div key={rowIdx} className="flex gap-1">
@@ -100,9 +100,9 @@ export const CapturedPieces = ({
         {/* Divider */}
         <div className="h-16 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent" />
 
-        {/* Black's Captures (White pieces that Black captured) */}
+        {/* White pieces captured (by Black) */}
         <div>
-          <div className="text-white/60 text-xs font-semibold mb-2 text-center">Black's Captures</div>
+          <div className="text-white/60 text-xs font-semibold mb-2 text-center">Captured White Pieces</div>
           <div className="space-y-1">
             {whiteLayout.map((row, rowIdx) => (
               <div key={rowIdx} className="flex gap-1">

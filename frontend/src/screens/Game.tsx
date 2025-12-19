@@ -61,10 +61,12 @@ export const Game = () => {
                     // Capture detection before making the move
                     const capturedSquare = chess.get(move.to);
                     if (capturedSquare) {
-                        if (capturedSquare.color === "w") {
-                            setBlackCaptured(prev => [...prev, capturedSquare.type]);
-                        } else {
+                        // If a black piece was captured, add to whiteCaptured (white took black)
+                        if (capturedSquare.color === "b") {
                             setWhiteCaptured(prev => [...prev, capturedSquare.type]);
+                        } else {
+                            // If a white piece was captured, add to blackCaptured (black took white)
+                            setBlackCaptured(prev => [...prev, capturedSquare.type]);
                         }
                     }
                     chess.move(move);
